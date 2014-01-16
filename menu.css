@@ -1,0 +1,17 @@
+.context-menu-root {
+  position: absolute;
+  padding-left: 0;
+}
+
+.context-menu-item
+{
+  background-color: white;
+  border: 1px solid grey;
+  list-style: none;          
+  padding: 0.1em;
+}                 
+
+.context-menu-item:hover 
+{
+  background-color: lightgrey;
+}

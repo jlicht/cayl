@@ -1,0 +1,7 @@
+.cayl-banner {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: pink;
+  padding: 1em;
+}

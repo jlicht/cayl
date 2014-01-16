@@ -1,0 +1,28 @@
+span.cayl {
+  display: none;
+}         
+        
+span.cayl-widget {
+  font-size: 50%;
+  padding: 0 0.25em;
+  color: gray;
+}                           
+
+span.cayl-widget:after {
+  content: "\25BC";
+}
+    
+span.cayl:hover, span.cayl.on {
+  display: inline-block;
+  position: absolute;        
+  margin-top: 1em;      
+  padding: 0.25em;       
+  font-size: 200%;
+  
+  background-color: white;
+  border: 1px solid gray;
+}
+
+span.cayl:hover {
+  background-color: lightgray;
+}
