@@ -8,6 +8,7 @@ a:hover + span.cayl, span.cayl:hover {
   margin-left: -1em;
   margin-top: 0.5em;      
   padding: 0.1em;
+  z-index: 99999;
   
   background-color: white;
   border: 1px solid gray;

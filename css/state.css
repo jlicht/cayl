@@ -3,5 +3,6 @@
   top: 0;
   width: 100%;
   background-color: pink;
-  padding: 1em;
+  padding: 1em;                         
+  z-index: 99999;
 }
