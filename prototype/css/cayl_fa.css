@@ -1,0 +1,16 @@
+.cayl-interstitial .cayl-cached, 
+.cayl-interstitial .cayl-live {    
+  float: right;
+}
+
+.cayl-cached {
+  margin-right: 0;
+  margin-left: 25px;
+}                    
+                   
+.cayl-interstitial .cayl-cached a, 
+.cayl-interstitial .cayl-live a
+{                                                                        
+  background: url(../images/Arrow-Large-Left.png) left bottom no-repeat;      
+  text-align: right;
+}             
