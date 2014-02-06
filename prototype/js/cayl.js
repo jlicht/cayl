@@ -1,3 +1,5 @@
+var cayl_hovering_on_popup = false;
+
 function cayl_replace_args(s, args) {
   for (var key in args) {
     s = s.replace(new RegExp(key,"g"), args[key]);
@@ -35,13 +37,29 @@ function cayl_show_interstitial(e) {
   return false;
 }
 
-function cayl_show_hover(arg1) {
-  console.log(arg1);
-}
+                                                    
+function cayl_start_popup_hover(e) {
+  cayl_hovering_on_popup = true;
+} 
+
+function cayl_end_popup_hover(e) {
+  cayl_hovering_on_popup = false;   
+  jQuery(".cayl-hover").remove();
+}                        
                                             
-function cayl_start_hover(e) {               
-  var hover_html_up = '<div class="cayl-hover cayl-up"><div class="cayl-text">This site should be available</div><a href="{{LINK}}">View the Live Link</a><a href="{{CACHE}}">View the Cached Link</a></div>';
-  var hover_html_down = '<div class="cayl-hover cayl-down"><div class="cayl-text">This site may not be available</div><a href="{{LINK}}" class="cayl-live">View the Live Link</a><a href="{{CACHE}}" class="cayl-cache">View the Cached Link</a><div class="cayl-credit">Balatarin uses <a href="#">CAYL</a></div></div>';
+function cayl_calculate_hover_position(target) {
+  var status = jQuery(target).attr("data-ircache-status");
+  var offset = jQuery(target).offset();
+  if (status == "up") {
+    return {"left" : offset.left - 30, "top" : offset.top - 35}
+  } else {
+    return {"left" : offset.left - 15, "top" : offset.top - 115}
+  }
+}
+
+function cayl_start_link_hover(e) {               
+  var hover_html_up = '<div class="cayl-hover cayl-up"><div class="cayl-text">This site should be available</div><a href="{{LINK}}">View the Live Link</a><a href="{{CACHE}}">View the Cached Link</a><div class="cayl-arrow"></div></div>';
+  var hover_html_down = '<div class="cayl-hover cayl-down"><div class="cayl-text">This site may not be available</div><a href="{{LINK}}" class="cayl-live">View the Live Link</a><a href="{{CACHE}}" class="cayl-cache">View the Cached Link</a><div class="cayl-credit">Balatarin uses <a href="#">CAYL</a></div><div class="cayl-arrow"></div></div>';
                                                          
   var status = jQuery(this).attr("data-ircache-status");
   var delay = jQuery(this).attr("data-ircache-hover-delay");
@@ -56,20 +74,27 @@ function cayl_start_hover(e) {
 
       /* Position the hover text */
       var offset = jQuery(t).offset();
-      jQuery(".cayl-hover").css({"left" : offset.left, "top" : offset.top - 30});
+      jQuery(".cayl-hover").css(cayl_calculate_hover_position(t));    
+      jQuery(".cayl-hover").hover(cayl_start_popup_hover, cayl_end_popup_hover);
     }, delay);
     jQuery(this).attr("cayl-timer",timer);    
   }
 }
 
-function cayl_end_hover(e) {
-  clearTimeout(jQuery(this).attr("cayl-timer"));    
-  jQuery(".cayl-hover").remove();
+function cayl_end_link_hover(e) {
+  clearTimeout(jQuery(this).attr("cayl-timer"));         
+
+  /* Give them some time, and then check if they've moved over the popup before closing popup */
+  setTimeout(function() {
+    if (!cayl_hovering_on_popup) {
+      jQuery(".cayl-hover").remove();
+    }    
+  },100);
 }
 
 
 
 jQuery(document).ready(function($) {    
     $("a[data-ircache-location][data-ircache-behavior=override]").click(cayl_show_interstitial);    
-    $("a[data-ircache-location][data-ircache-behavior=hover]").hover(cayl_start_hover, cayl_end_hover);    
+    $("a[data-ircache-location][data-ircache-behavior=hover]").hover(cayl_start_link_hover, cayl_end_link_hover);    
   }); 
