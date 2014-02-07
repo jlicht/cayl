@@ -17,7 +17,8 @@
   border-radius: 4px;
   background: #34495e url(../images/Alert-Icon-Large.png) center 30px no-repeat;
   color: white;
-  font-family: Arial, sans-serif;
+  font-family: Arial, sans-serif;      
+  line-height: 28px;
 }                          
             
 .cayl-interstitial a.cayl-close {                                               
@@ -163,8 +164,7 @@
 } 
 
 .cayl-hover.cayl-up .cayl-text {
-  border-top-left-radius: 4px; 
-  border-bottom-left-radius: 4px; 
+  border-radius: 4px 0 0 4px; 
   padding: 0 8px 0 36px;
   background: #34495e url(../images/Checkmark-Small.png) 8px center no-repeat;   
 }
@@ -174,14 +174,13 @@
 .cayl-hover.cayl-down a.cayl-cache {
   color: white;
   display: inline-block;
-  background:  #5b88b3 url(../images/Arrow-Small-Right.png) right center no-repeat; ;
+  background:  #5b88b3 url(../images/Arrow-Small-Right.png) right center no-repeat;
   padding: 0 25px 0 12px;
 }                               
 
 .cayl-down {
   background-color: #34495e;
   padding: 4px 0 0 8px;              
-  width: 344px;
 } 
 
 .cayl-down .cayl-text {
@@ -205,5 +204,6 @@
 
 .cayl-hover .cayl-credit {
   font-size: 12px;
+  clear: left;
 }
 

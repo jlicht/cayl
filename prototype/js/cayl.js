@@ -1,6 +1,8 @@
 var cayl = {
 
-  hovering_on_popup : false,
+  hovering_on_popup : false,    
+  locale : 'en',       
+  rtl : false,
   translations : {
     en : {
       interstitial_html : 
@@ -17,12 +19,19 @@ var cayl = {
         '<div class="cayl-cached"><div>پیوند زندگی می کنند ممکن است به صفحه شما به دنبال نمی شود و ممکن است جایگزین شده است و یا روت به سرور دیگری.<div>اتصال به مخزن ما این است که از<br/>  ' +
         '{{DATE}}</div></div><a href="{{CACHE}}">نمایش لینک های cache شده</a></div><div class="cayl-live"><div><iframe src="{{LINK}}"/></div><a href="{{LINK}}">نمایش لینک های فعال</a></div>' +
         '<div class="cayl-credit">بالاترین از <a href="#"> CAYL </ A></div></div></div>',
-        hover_html_up : '<div class="cayl-hover cayl-up"><div class="cayl-text">This site should be available</div><a href="{{LINK}}">View the Live Link</a><a href="{{CACHE}}">View the Cached Link</a><div class="cayl-arrow"></div></div>',
-        hover_html_down : '<div class="cayl-hover cayl-down"><div class="cayl-text">This site may not be available</div><a href="{{LINK}}" class="cayl-live">View the Live Link</a><a href="{{CACHE}}" class="cayl-cache">View the Cached Link</a><div class="cayl-credit">Balatarin uses <a href="#">CAYL</a></div><div class="cayl-arrow"></div></div>',      
+        hover_html_up : '<div class="cayl-hover cayl-up"><div class="cayl-text">این سایت باید در دسترس باشد</div><a href="{{LINK}}" class="cayl-live">دیدن لینک زنده</a><a href="{{CACHE}}" class="cayl-cache">دیدن لینک خرید پستی</a><div class="cayl-arrow"></div></div>',
+        hover_html_down : '<div class="cayl-hover cayl-down"><div class="cayl-text">این سایت ممکن است در دسترس</div><a href="{{LINK}}" class="cayl-live">دیدن لینک زنده</a><a href="{{CACHE}}" class="cayl-cache">دیدن لینک خرید پستی</a><div class="cayl-credit"> بالاترین از <a href="#"> CAYL </a></div><div class="cayl-arrow"></div></div>',      
       },      
     },
+    
+  set_locale : function(locale) {
+    cayl.locale = locale;         
+    cayl.rtl = (locale == 'fa');
+  },                                 
   
-  text : {},
+  get_text : function(key) {    
+    return cayl.translations[cayl.locale][key];
+  },
                      
   replace_args : function (s, args) {
     for (var key in args) {
@@ -43,7 +52,7 @@ var cayl = {
       '{{CACHE}}' : jQuery(this).attr("data-ircache-location"),
     }                                                
 
-    jQuery("body").append(cayl.replace_args(cayl.text.interstitial_html,replacements));    
+    jQuery("body").append(cayl.replace_args(cayl.get_text('interstitial_html'), replacements));    
 
     /* Center the window */
     var left = jQuery(window).width()/2 - jQuery(".cayl-interstitial").width()/2;
@@ -51,7 +60,7 @@ var cayl = {
     jQuery(".cayl-interstitial").css({"left" : left, "top": top});
   
     /* Clicking on the overlay or close button closes the window */
-    jQuery(".cayl-overlay, .cayl-close").click(function(e) { jQuery(".cayl-overlay, .cayl-interstitial").remove(); });
+    jQuery(".cayl-overlay, .cayl-close").click(function(e) { jQuery(".cayl-overlay, .cayl-interstitial").remove(); return false; });
   
     return false;
   },
@@ -69,11 +78,16 @@ var cayl = {
   calculate_hover_position : function (target) {
     var status = jQuery(target).attr("data-ircache-status");
     var offset = jQuery(target).offset();
+    var result = {};
     if (status == "up") {
-      return {"left" : offset.left - 30, "top" : offset.top - 35}
+      result = {"left" : offset.left - 30, "top" : offset.top - 35}
     } else {
-      return {"left" : offset.left - 15, "top" : offset.top - 115}
-    }
+      result = {"left" : offset.left - 15, "top" : offset.top - 115}
+    }                                 
+    if (cayl.rtl) {
+      result.left = result.left + jQuery(target).width() - jQuery(".cayl-hover").width();
+    }          
+    return result;
   },
 
   start_link_hover : function (e) {               
@@ -87,7 +101,7 @@ var cayl = {
     t = this;
     if (delay) {
       var timer = setTimeout(function() {                  
-        jQuery("body").append(cayl.replace_args(status == "up" ? cayl.text.hover_html_up : cayl.text.hover_html_down, args));
+        jQuery("body").append(cayl.replace_args(status == "up" ? cayl.get_text('hover_html_up') : cayl.get_text('hover_html_down'), args));
 
         /* Position the hover text */
         var offset = jQuery(t).offset();
@@ -109,8 +123,8 @@ var cayl = {
     },100);
   },      
 };
-          
-cayl.text = cayl.translations.en;
+                      
+  
 
 jQuery(document).ready(function($) {    
     $("a[data-ircache-location][data-ircache-behavior=override]").click(cayl.show_interstitial);    
